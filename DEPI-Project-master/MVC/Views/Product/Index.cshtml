@@ -15,7 +15,7 @@
             <tr>
                 <td>@item.Name</td>
                 <td>@item.Price</td>
-                <td><a asp-action="Reviews" asp-route-id="@item.Id">Review List</a></td>
+                <td><a asp-action="Review/index.cshtml" asp-route-id="@item.Id">Review List</a></td>
             </tr>
         }
     </tbody>
