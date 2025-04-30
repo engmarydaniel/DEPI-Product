@@ -1,5 +1,7 @@
 ﻿@model List<Product>
-
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
 <h2>Product list</h2>
 <table class="table">
     <thead>
@@ -15,7 +17,11 @@
             <tr>
                 <td>@item.Name</td>
                 <td>@item.Price</td>
-                <td><a asp-action="Review/index.cshtml" asp-route-id="@item.Id">Review List</a></td>
+@*                 <td><a asp-action="Product/ProductReviews.cshtml" asp-route-id="@item.Id">Review List</a></td>
+ *@
+                <td>
+                    <img src="~/images/@item.ImageLocalPath" alt="Product Image" style="width:150px;" />
+                    </td>
             </tr>
         }
     </tbody>
