@@ -1,5 +1,4 @@
-﻿using Models;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
@@ -25,15 +24,15 @@ namespace MVC.Models
         public DateTime? UpdatedAt { get; set; }
 
         public string UserId { get; set; }
-        [ForeignKey("UserId")]
-        [JsonIgnore]
-        [IgnoreDataMember]
-        public AppUser User { get; set; }
+        //[ForeignKey("UserId")]
+        //[JsonIgnore]
+        //[IgnoreDataMember]
+        //public AppUser User { get; set; }
 
         public int ProductId { get; set; }
-        [ForeignKey("ProductId")]
-        [JsonIgnore]
-        [IgnoreDataMember]
-        public Product Product { get; set; }
+        //[ForeignKey("ProductId")]
+        //[JsonIgnore]
+        //[IgnoreDataMember]
+        //public Product Product { get; set; }
     }
 }

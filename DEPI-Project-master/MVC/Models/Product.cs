@@ -1,9 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Models;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
+using MathNet.Numerics;
 
 namespace MVC.Models
 {
@@ -21,9 +20,9 @@ namespace MVC.Models
         [DataType(DataType.MultilineText)]
         public string Description { get; set; }
 
-        [Precision(18, 2)]
+       
         public decimal Price { get; set; } = 0;
-        [Precision(18, 2)]
+        
         public decimal TotalPrice
         {
             get
@@ -41,8 +40,7 @@ namespace MVC.Models
         public string Brand { get; set; }
 
         public int CategoryId { get; set; }
-        [ForeignKey("CategoryId")]
-        public Category Category { get; set; }
+       
 
         public string ImageUrl { get; set; }
 
@@ -52,13 +50,11 @@ namespace MVC.Models
         [Required]
         public string ProductCode { get; set; }
 
-        [Precision(3, 2)]
+      
         public decimal AverageRating { get; set; } = 0;
 
         public int ReviewCount { get; set; } = 0;
         public ICollection<Review> Reviews { get; set; }
-        [JsonIgnore]
-        [IgnoreDataMember]
-        public ICollection<ProductWishlist> Wishlists { get; set; }
+       
     }
 }
