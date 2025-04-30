@@ -4,16 +4,14 @@ using Microsoft.AspNetCore.Mvc;
 using MVC.Models.Dtos;
 using MVC.Models;
 using static Utility.SD;
-
 namespace MVC.Services
 {
-    public class ProductService
+    public class ReviewService
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private string Url;
         private readonly BaseService _baseService;
-
-        public ProductService(IHttpClientFactory clientFactory, IConfiguration configuration, BaseService baseService)
+        public ReviewService(IHttpClientFactory clientFactory, IConfiguration configuration, BaseService baseService)
         {
             _httpClientFactory = clientFactory;
             Url = configuration.GetValue<string>("ServiceUrls:Api");
@@ -25,7 +23,7 @@ namespace MVC.Services
             return await _baseService.SendAsync<T>(new APIRequest()
             {
                 ApiType = ApiType.Get,
-                Url = Url + "/api/Product",
+                Url = Url + "/api/Review",
             });
         }
         public async Task<T> GetAsync<T>(int id)
@@ -33,25 +31,25 @@ namespace MVC.Services
             return await _baseService.SendAsync<T>(new APIRequest()
             {
                 ApiType = ApiType.Get,
-                Url = Url + "/api/Product/" + id,
+                Url = Url + "/api/Review/" + id,
             });
         }
-        public async Task<T> CreateAsync<T>(ProductDto dto)
+        public async Task<T> CreateAsync<T>(ReviewDto dto)
         {
             return await _baseService.SendAsync<T>(new APIRequest()
             {
                 ApiType = ApiType.Post,
                 Data = dto,
-                Url = Url + "/api/Product",
+                Url = Url + "/api/Review",
             });
         }
-        public async Task<T> UpdateAsync<T>(int id, ProductDto dto)
+        public async Task<T> UpdateAsync<T>(int id, ReviewDto dto)
         {
             return await _baseService.SendAsync<T>(new APIRequest()
             {
                 ApiType = ApiType.Put,
                 Data = dto,
-                Url = Url + "/api/Product/" + id,
+                Url = Url + "/api/Review/" + id,
             });
         }
         public async Task<T> DeleteAsync<T>(int id)
@@ -59,10 +57,8 @@ namespace MVC.Services
             return await _baseService.SendAsync<T>(new APIRequest()
             {
                 ApiType = ApiType.Delete,
-                Url = Url + "/api/Product/" + id,
+                Url = Url + "/api/Review/" + id,
             });
         }
-       
-
     }
 }
