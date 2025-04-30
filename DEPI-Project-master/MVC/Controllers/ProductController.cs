@@ -1,124 +1,63 @@
 ﻿using System.Net.Http;
 using Microsoft.AspNetCore.Mvc;
+using MVC.Models;
 using MVC.Models.Dtos;
 using MVC.Services;
 using Newtonsoft.Json;
-using Microsoft.AspNetCore.Authorization;
-using MVC.Models;
+
 namespace MVC.Controllers
 {
     public class ProductController : Controller
     {
         private readonly ProductService _productService;
-        private readonly TokenProviderService _tokenProviderService;
 
-        public ProductController(ProductService productService,TokenProviderService tokenProviderService)
+        public ProductController(ProductService productService)
         {
             _productService = productService;
-            _tokenProviderService = tokenProviderService;
         }
 
         public async Task<IActionResult> Index()
         {
-            var response = await _productService.GetAllAsync<APIResponse>();
-            List<Product> productList = new List<Product>();
-            if (response != null)
-            {
-                productList = JsonConvert.DeserializeObject<List<Product>>(Convert.ToString(response.Data));
-            }
-            return View(productList);
+            var products = await _productService.GetProductsAsync<Product>();
+            return View(products);
         }
 
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> ProductReviews(int id)
+        {
+            var product = await _productService.GetProductWithReviewsAsync(id);
+            return View(product);
+        }
+        public IActionResult Create()
         {
             return View();
         }
+
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize]
-        public async Task<IActionResult> Create(ProductDto dto)
+        public async Task<IActionResult> Create([FromBody] ProductDto model)
         {
-            var response = await _productService.CreateAsync<APIResponse>(dto);
-            if (response != null)
+            //if (!ModelState.IsValid)
+            //    return View(model);
+            //var result = await _productService.CreateProductAsync(model);
+
+            //if (result)
+            //    return RedirectToAction("Index");
+
+            //ModelState.AddModelError("", "Error while creating product");
+            // return View(model);
+
+            var model2 = new ProductDto { Name = "Test", Price = 100, Description = "desc" };
+            
+            var result = await _productService.CreateProductAsync(model2);
+
+            if (result.IsSuccess)
             {
-                return RedirectToAction(nameof(Index));
+                //return Ok(new { message = "Product created successfully." });
+                return RedirectToAction("Index");
             }
             else
             {
-                ModelState.AddModelError("CustomError", response.Errors.FirstOrDefault());
-                return View(dto);
+                return View(model);
             }
-        }
-        [HttpGet]
-        public async Task<IActionResult> Update(int id)
-        {
-            var response = await _productService.GetAsync<APIResponse>(id);
-            ProductDto product = new();
-            if (response != null)
-            {
-                product = JsonConvert.DeserializeObject<ProductDto>(Convert.ToString(response.Data));
-            }
-            if (product == null)
-            {
-                return NotFound();
-            }
-            TempData["id"] = id;
-            return View(product);
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize]
-        public async Task<IActionResult> UpdateProduct(int id, ProductDto dto)
-        {
-            var response = await _productService.UpdateAsync<APIResponse>(id, dto);
-            if (response != null)
-            {
-                TempData["success"] = "Product Updated successfully";
-                return RedirectToAction(nameof(Index));
-            }
-            else
-            {
-                ModelState.AddModelError("CustomError", response.Errors.FirstOrDefault());
-                TempData["error"] = "Error encountered.";
-                return View(dto);
-            }
-        }
-        [HttpGet]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var response = await _productService.GetAsync<APIResponse>(id);
-            Product product = new();
-            if (response != null)
-            {
-                product = JsonConvert.DeserializeObject<Product>(Convert.ToString(response.Data));
-            }
-            if (product == null)
-            {
-                return NotFound();
-            }
-
-            return View(product);
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize]
-        public async Task<IActionResult> Delete(Product dto)
-        {
-            var response = await _productService.DeleteAsync<APIResponse>(dto.Id);
-            if (response != null)
-            {
-                TempData["success"] = "Product Deleted successfully";
-                return RedirectToAction(nameof(Index));
-            }
-            else
-            {
-                ModelState.AddModelError("CustomError", response.Errors.FirstOrDefault());
-                TempData["error"] = "Error encountered.";
-                return View(dto);
-            }
-
-
-
         }
     }
 }
